@@ -1,10 +1,9 @@
 import { Directive, ElementRef, Input, OnDestroy, NgZone ,PLATFORM_ID } from '@angular/core';
 import { Subject } from 'rxjs';
-import { } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 
 @Directive({
-  selector: '[appParallax]',
+  selector: '[smooth-parallax]',
 })
 export class ParallaxDirective implements OnDestroy {
   @Input()
@@ -28,7 +27,7 @@ export class ParallaxDirective implements OnDestroy {
   }
 
   @Input()
-  public set appParallax(value: boolean) {
+  public set smoothParallax(value: boolean) {
     if (this.isNodePlatform) {
       return;
     }

@@ -1,6 +1,7 @@
 {
   "name": "ngx-smooth-parallax",
   "version": "0.0.0",
+  "repository": "https://github.com/phuchieuct93abc/ngx-smooth-parallax.git",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

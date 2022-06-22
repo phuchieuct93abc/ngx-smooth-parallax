@@ -6,6 +6,7 @@ import { ParallaxDirective } from './parallax.directive';
     ParallaxDirective
   ],
   imports: [
+    
   ],
   exports: [
     ParallaxDirective

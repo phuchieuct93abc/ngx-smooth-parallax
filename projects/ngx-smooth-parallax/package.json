@@ -1,6 +1,7 @@
 {
   "name": "ngx-smooth-parallax",
-  "version": "0.0.1",
+  "version": "0.0.4",
+  "repository": "https://github.com/phuchieuct93abc/ngx-smooth-parallax.git",
   "peerDependencies": {
     "@angular/common": "^12.1.0",
     "@angular/core": "^12.1.0"
