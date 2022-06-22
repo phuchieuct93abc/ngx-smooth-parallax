@@ -11,6 +11,12 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
+    "paths": {
+      "ngx-smooth-parallax": [
+        "dist/ngx-smooth-parallax/ngx-smooth-parallax",
+        "dist/ngx-smooth-parallax"
+      ]
+    },
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
