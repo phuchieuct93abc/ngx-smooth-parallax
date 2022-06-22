@@ -79,9 +79,7 @@ export class ParallaxDirective implements OnDestroy {
 
   private updateAnimation([entry]: IntersectionObserverEntry[]) {
   
-    if (
-      (entry.boundingClientRect.top < window.innerHeight && entry.boundingClientRect.bottom > window.innerHeight) || entry.boundingClientRect.top > window.innerHeight
-    ) {
+    if ( entry.boundingClientRect.bottom > window.innerHeight ) {
       // prevent parallax when under view fold
       this.updateTransform(0);
       return;
