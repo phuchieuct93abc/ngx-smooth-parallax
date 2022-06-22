@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { isPlatformServer } from '@angular/common';
 
 @Directive({
-  selector: '[smooth-parallax]',
+  selector: '[parallax]',
 })
 export class ParallaxDirective implements OnDestroy {
   @Input()
@@ -27,7 +27,7 @@ export class ParallaxDirective implements OnDestroy {
   }
 
   @Input()
-  public set smoothParallax(value: boolean) {
+  public set parallax(value: boolean) {
     if (this.isNodePlatform) {
       return;
     }
