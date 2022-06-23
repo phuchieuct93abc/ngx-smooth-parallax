@@ -1,6 +1,6 @@
 # NgxSmoothParallax
 ## [DEMO](https://angular-ivy-mftzqa.stackblitz.io)
-## How to use:
+## Get started:
 ### Install:
 ```
 npm i ngx-smooth-scroll
@@ -35,3 +35,9 @@ export class AppModule {}
 </div>
 
 ```
+
+### Options
+| Name          | Description |
+| ------------- | ------------- |
+|  parallax | `type:boolean` : True to enable parallax effect, otherwise false to turn it off. *Default: false*   |
+| startOffsetParallax  |`type: number` Offset top to start parallax  *Default: 0*  |
