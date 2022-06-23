@@ -16,12 +16,11 @@ export class ParallaxDirective implements OnDestroy {
   private observer: IntersectionObserver|null = null;
   private previousTransition: string = '';
   private isParallax = false;
-    private isNodePlatform =  isPlatformServer(PLATFORM_ID);
+  private isNodePlatform =  isPlatformServer(PLATFORM_ID);
+  
   public constructor(
     private elementRef: ElementRef<HTMLElement>,
-    
     private zone: NgZone,
-    
   ) {
 
   }
