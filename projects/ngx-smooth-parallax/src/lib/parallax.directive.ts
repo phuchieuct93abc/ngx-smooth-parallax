@@ -68,6 +68,7 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   public ngOnDestroy(): void {
     this.onDestroy$.next();
     this.observer?.disconnect();
+    this.parallaxObserver.complete();
   }
 
   private getThresholdSet(): number[] {
@@ -99,11 +100,7 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
     if (this.isNodePlatform) {
       return;
     }
-    requestAnimationFrame(
-      () =>
-        (this.elementRef.nativeElement.style.transition =
-          this.previousTransition)
-    );
+    this.elementRef.nativeElement.style.transition = this.previousTransition;
     this.observer?.disconnect?.();
     this.updateTransform(0);
   }
