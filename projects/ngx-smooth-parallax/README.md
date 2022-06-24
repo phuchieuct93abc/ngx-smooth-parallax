@@ -1,9 +1,9 @@
 # NgxSmoothParallax
-## [DEMO](https://angular-ivy-mftzqa.stackblitz.io)
+## [DEMO](https://stackblitz.com/edit/angular-ivy-mftzqa)
 ## Get started:
 ### Install:
 ```
-npm i ngx-smooth-scroll
+npm i ngx-smooth-parallax
 ```
 ### Import module
 ```

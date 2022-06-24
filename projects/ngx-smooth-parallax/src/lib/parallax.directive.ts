@@ -1,42 +1,67 @@
-import { Directive, ElementRef, Input, OnDestroy, NgZone ,PLATFORM_ID } from '@angular/core';
-import { Subject } from 'rxjs';
+import {
+  Directive,
+  ElementRef,
+  Input,
+  OnDestroy,
+  NgZone,
+  PLATFORM_ID,
+  AfterViewInit,
+  OnChanges,
+  
+} from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { isPlatformServer } from '@angular/common';
 
 @Directive({
   selector: '[parallax]',
 })
-export class ParallaxDirective implements OnDestroy {
+export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   @Input()
   public maxParallax = 0;
   @Input()
   public startOffsetParallax = 0;
+  @Input()
+  public parallax = false;
+  @Input()
+  public scrollVelocity = 0.3;
+
+  private hasStartedParallax = false;
 
   public readonly limitRangeParallax = 200;
   public onDestroy$ = new Subject<void>();
-  private observer: IntersectionObserver|null = null;
+  private observer: IntersectionObserver | null = null;
   private previousTransition: string = '';
-  private isParallax = false;
-  private isNodePlatform =  isPlatformServer(PLATFORM_ID);
-  
+  private isNodePlatform = isPlatformServer(PLATFORM_ID);
+
+  private parallaxObserver = new BehaviorSubject<boolean>(true);
+
   public constructor(
     private elementRef: ElementRef<HTMLElement>,
-    private zone: NgZone,
-  ) {
+    private zone: NgZone
+  ) {}
 
+  ngOnChanges(): void {
+    this.parallaxObserver.next(this.parallax);
   }
 
-  @Input()
-  public set parallax(value: boolean) {
+  ngAfterViewInit(): void {
     if (this.isNodePlatform) {
       return;
     }
-    this.zone.runOutsideAngular(() => {
-      if (value) {
-        this.startParallax();
-        this.isParallax = true;
-      } else if (this.isParallax) {
-        this.stopParallax();
-      }
+    this.parallaxObserver.subscribe(() => {
+      this.zone.runOutsideAngular(() => {
+        if(this.hasStartedParallax){
+
+          this.stopParallax();
+          this.hasStartedParallax = false;
+        }
+
+        if (this.parallax) {
+          this.startParallax();
+          this.hasStartedParallax = true;
+
+        }
+      });
     });
   }
 
@@ -46,7 +71,7 @@ export class ParallaxDirective implements OnDestroy {
   }
 
   private getThresholdSet(): number[] {
-    const step = this.elementRef.nativeElement.getBoundingClientRect().height * 2;
+    const step = 100;
     const result: number[] = [];
     for (let i = 0; i <= step; i++) {
       result.push(i / step);
@@ -58,11 +83,14 @@ export class ParallaxDirective implements OnDestroy {
     this.previousTransition = this.elementRef.nativeElement.style.transition;
     this.elementRef.nativeElement.style.transition = 'transform 0.05s linear';
     this.observer?.disconnect?.();
-
-    this.observer = new IntersectionObserver((entries) => this.updateAnimation(entries), {
-      rootMargin: `-${this.startOffsetParallax}px 0px 0px 0px`,
-      threshold: this.getThresholdSet(),
-    });
+    this.observer = new IntersectionObserver(
+      (entries) => this.updateAnimation(entries),
+      {
+        root: window.document,
+        rootMargin: `${0 - this.startOffsetParallax}px 0px 0px 0px`,
+        threshold: this.getThresholdSet(),
+      }
+    );
 
     this.observer.observe(this.elementRef.nativeElement);
   }
@@ -71,19 +99,22 @@ export class ParallaxDirective implements OnDestroy {
     if (this.isNodePlatform) {
       return;
     }
-    requestAnimationFrame(() => (this.elementRef.nativeElement.style.transition = this.previousTransition));
+    requestAnimationFrame(
+      () =>
+        (this.elementRef.nativeElement.style.transition =
+          this.previousTransition)
+    );
     this.observer?.disconnect?.();
     this.updateTransform(0);
   }
 
   private updateAnimation([entry]: IntersectionObserverEntry[]) {
-  
-    if ( entry.boundingClientRect.bottom > window.innerHeight ) {
+    if (entry.boundingClientRect.bottom > window.innerHeight) {
       // prevent parallax when under view fold
       this.updateTransform(0);
       return;
     }
-    const deltaY = (1 - entry.intersectionRatio) * 30;
+    const deltaY = (1 - entry.intersectionRatio) * this.scrollVelocity * 100;
     this.updateTransform(deltaY);
   }
 
