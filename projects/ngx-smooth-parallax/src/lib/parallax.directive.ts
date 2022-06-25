@@ -24,8 +24,6 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   public parallax = false;
   @Input()
   public scrollVelocity = 0.3;
-  @Input()
-  public step = 1000;
 
   private hasStartedParallax = false;
 
@@ -74,9 +72,10 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   }
 
   private getThresholdSet(): number[] {
+    const step = 1/this.elementRef.nativeElement.offsetHeight;
     const result: number[] = [];
-    for (let i = 0; i <= this.step; i++) {
-      result.push(i / this.step);
+    for (let i = 0; i <= 1; i+=step) {  
+      result.push(i);
     }
     return result;
   }

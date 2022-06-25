@@ -4,10 +4,11 @@
   "repository": "https://github.com/phuchieuct93abc/ngx-smooth-parallax.git",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run build-lib  & ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "build-lib": "ng build ngx-smooth-parallax --watch",
     "publish": "ng build && cd dist/ngx-smooth-parallax && npm publish"
   },
   "private": true,
