@@ -27,7 +27,6 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
 
   private hasStartedParallax = false;
 
-  public readonly limitRangeParallax = 200;
   public onDestroy$ = new Subject<void>();
   private observer: IntersectionObserver | null = null;
   private previousTransition: string = '';
