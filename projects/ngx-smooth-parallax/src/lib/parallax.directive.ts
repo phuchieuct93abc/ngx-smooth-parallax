@@ -50,7 +50,6 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
     this.parallaxObserver.subscribe(() => {
       this.zone.runOutsideAngular(() => {
         if(this.hasStartedParallax){
-
           this.stopParallax();
           this.hasStartedParallax = false;
         }
@@ -86,7 +85,6 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
     this.observer = new IntersectionObserver(
       (entries) => this.updateAnimation(entries),
       {
-        root: window.document,
         rootMargin: `${0 - this.startOffsetParallax}px 0px 0px 0px`,
         threshold: this.getThresholdSet(),
       }
