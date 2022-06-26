@@ -85,6 +85,7 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
     this.observer = new IntersectionObserver(
       (entries) => this.updateAnimation(entries),
       {
+        root:null,
         rootMargin: `${0 - this.startOffsetParallax}px 0px 0px 0px`,
         threshold: this.getThresholdSet(),
       }
