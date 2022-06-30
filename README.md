@@ -1,5 +1,5 @@
 # NgxSmoothParallax
-## [DEMO](https://angular-ivy-mftzqa.stackblitz.io)
+## [DEMO](https://stackblitz.com/edit/angular-ivy-mftzqa?file=src%2Fapp%2Fapp.component.ts)
 ## How to use:
 ### Install:
 ```
