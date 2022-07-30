@@ -70,9 +70,9 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   }
 
   private getThresholdSet(): number[] {
-    const step = 1/this.elementRef.nativeElement.offsetHeight;
+    let step = 1 / this.elementRef.nativeElement.offsetHeight;
     const result: number[] = [];
-    for (let i = 0; i <= 1; i+=step) {  
+    for (let i = 0; i <= 1; i+=(step*2)) {  
       result.push(i);
     }
     return result;
@@ -104,7 +104,9 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   }
 
   private updateAnimation([entry]: IntersectionObserverEntry[]) {
-    if (entry.boundingClientRect.bottom > window.innerHeight) {
+    const underViewFold = entry.boundingClientRect.bottom > window.innerHeight
+    const intersectingHorizontal = entry.intersectionRect.width < entry.boundingClientRect?.width && entry.intersectionRect.width >0;
+    if (underViewFold || intersectingHorizontal) {
       // prevent parallax when under view fold
       this.updateTransform(0);
       return;
