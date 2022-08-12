@@ -24,6 +24,8 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   public parallax = false;
   @Input()
   public scrollVelocity = 0.3;
+  @Input()
+  public animation = false;
 
   private hasStartedParallax = false;
 
@@ -79,8 +81,11 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   }
 
   private startParallax(): void {
-    this.previousTransition = this.elementRef.nativeElement.style.transition;
-    this.elementRef.nativeElement.style.transition = 'transform 0.05s linear';
+    if (this.animation) { 
+      this.previousTransition = this.elementRef.nativeElement.style.transition;
+      this.elementRef.nativeElement.style.transition = 'transform 0.05s linear';
+    }
+   
     this.observer?.disconnect?.();
     this.observer = new IntersectionObserver(
       (entries) => this.updateAnimation(entries),
@@ -98,7 +103,9 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
     if (this.isNodePlatform) {
       return;
     }
-    this.elementRef.nativeElement.style.transition = this.previousTransition;
+    if (this.animation) { 
+      this.elementRef.nativeElement.style.transition = this.previousTransition;
+    }
     this.observer?.disconnect?.();
     this.updateTransform(0);
   }
