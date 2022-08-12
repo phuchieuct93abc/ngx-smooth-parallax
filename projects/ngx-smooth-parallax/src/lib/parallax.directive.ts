@@ -74,7 +74,7 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   private getThresholdSet(): number[] {
     let step = 1 / this.elementRef.nativeElement.offsetHeight;
     const result: number[] = [];
-    for (let i = 0; i <= 1; i+=(step*2)) {  
+    for (let i = 0; i <= 1; i+=step) {  
       result.push(i);
     }
     return result;
@@ -123,6 +123,6 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   }
 
   private updateTransform(translateY: number) {
-    this.elementRef.nativeElement.style.transform = `translateY(${translateY}%)`;
+    this.elementRef.nativeElement.style.transform = `translateY(${translateY.toFixed(1)}%)`;
   }
 }
