@@ -27,6 +27,9 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   @Input()
   public animation = false;
 
+  @Input()
+  public log = false;
+
   private hasStartedParallax = false;
 
   public onDestroy$ = new Subject<void>();
@@ -111,18 +114,25 @@ export class ParallaxDirective implements OnDestroy, AfterViewInit, OnChanges {
   }
 
   private updateAnimation([entry]: IntersectionObserverEntry[]) {
+    this.log && console.log('Start update animation');
     const underViewFold = entry.boundingClientRect.bottom > window.innerHeight
-    const intersectingHorizontal = entry.intersectionRect.width < entry.boundingClientRect?.width && entry.intersectionRect.width >0;
-    if (underViewFold || intersectingHorizontal) {
+
+    if (underViewFold ) {
+      this.log && console.log('prevent parallax when under view fold');
+
       // prevent parallax when under view fold
       this.updateTransform(0);
       return;
     }
-    const deltaY = (1 - entry.intersectionRatio) * this.scrollVelocity * 100;
+    const deltaY = (1 - (entry.intersectionRect.height / entry.boundingClientRect.height)) * this.scrollVelocity * 100;
+    this.log && console.log('intersectionRatio deltaY',entry,deltaY);
+
     this.updateTransform(deltaY);
   }
 
   private updateTransform(translateY: number) {
-    this.elementRef.nativeElement.style.transform = `translateY(${translateY.toFixed(1)}%)`;
+    this.log && console.log('tofixed deltaY',translateY.toFixed(1));
+
+    this.elementRef.nativeElement.style.transform = `translateY(${translateY.toFixed(2)}%)`;
   }
 }
