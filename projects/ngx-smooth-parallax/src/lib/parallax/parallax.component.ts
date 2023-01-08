@@ -15,14 +15,13 @@ export class ParallaxComponent implements AfterViewInit {
   @Input()
   public parallax = false;
   @Input()
-  public scrollVelocity = 0.3;
+  public scrollVelocity = 0.7;
 
 
   private hasStartedParallax = false;
 
   public onDestroy$ = new Subject<void>();
   private observer: IntersectionObserver | null = null;
-  private previousTransition: string = '';
   private isNodePlatform = isPlatformServer(PLATFORM_ID);
 
   private parallaxObserver = new BehaviorSubject<boolean>(true);
@@ -79,8 +78,7 @@ export class ParallaxComponent implements AfterViewInit {
   }
 
   private startParallax(): void {
-    this.previousTransition = this.elementRef.nativeElement.style.transition;
-    this.wrapper.nativeElement.style.transition = 'transform 0.05s linear';
+    // this.wrapper.nativeElement.style.transition = 'transform 0.05s linear';
     this.observer?.disconnect?.();
     this.observer = new IntersectionObserver(
       () => this.updateAnimation(),
@@ -98,7 +96,6 @@ export class ParallaxComponent implements AfterViewInit {
     if (this.isNodePlatform) {
       return;
     }
-    this.elementRef.nativeElement.style.transition = this.previousTransition;
     this.observer?.disconnect?.();
     this.updateTransform(0);
   }
@@ -122,11 +119,11 @@ export class ParallaxComponent implements AfterViewInit {
 
 
   private getIntersectionRatio():number { 
-    const { top } = this.elementRef.nativeElement.getBoundingClientRect();
+    const top = this.elementRef.nativeElement.getBoundingClientRect().top - this.startOffsetParallax;
     if (top >= 0) { 
       return 0;
     };
-    return (-top+this.startOffsetParallax) * this.scrollVelocity;
+    return Math.min(-top * this.scrollVelocity,this.elementRef.nativeElement.offsetHeight * 0.7);
 
   }
 
