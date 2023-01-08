@@ -22,13 +22,14 @@ export class AppModule {}
 ```
 <div class="scroll-element" style="height: 200vh">
   <div class="parallax-wrapper" style="overflow:hidden">
-    <img
-      style="height:200px"
-      [parallax]="true"
-      src="https://picsum.photos/1000/300"
-    />
+    <ngx-smooth-parallax [startOffsetParallax]="300">
+      <img
+        style="height:200px"
+        [parallax]="true"
+        src="https://picsum.photos/1000/300"
+      />
+    </ngx-smooth-parallax>
   </div>
-
   <div>
     Content
   </div>
@@ -39,5 +40,6 @@ export class AppModule {}
 ### Options
 | Name          | Description |
 | ------------- | ------------- |
-|  parallax | `type:boolean` : True to enable parallax effect, otherwise false to turn it off. *Default: false*   |
+| parallax | `type:boolean` : True to enable parallax effect, otherwise false to turn it off. *Default: true*   |
 | startOffsetParallax  |`type: number` Offset top to start parallax  *Default: 0*  |
+| scrollVelocity  |`type: number` The parallax velocity, value from 0 - 10  *Default: 0*  |

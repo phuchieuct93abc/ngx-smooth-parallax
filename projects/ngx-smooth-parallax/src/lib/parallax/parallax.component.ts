@@ -1,92 +1,71 @@
-import {Component, OnInit, ElementRef, Input, NgZone, PLATFORM_ID, ViewChild, AfterContentInit, ContentChild, AfterViewInit} from '@angular/core';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {isPlatformServer} from '@angular/common';
+import { Component, OnInit, ElementRef, Input, NgZone, PLATFORM_ID, ViewChild, AfterContentInit, ContentChild, AfterViewInit } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { isPlatformServer } from '@angular/common';
 
 @Component({
   selector: 'ngx-smooth-parallax',
   templateUrl: './parallax.component.html',
-  styleUrls: ['./parallax.component.css']
 })
 export class ParallaxComponent implements AfterViewInit {
   @Input()
-  public maxParallax = 0;
-  @Input()
   public startOffsetParallax = 0;
-  @Input()
-  public parallax = true;
-  @Input()
-  public scrollVelocity = 0.7;
-  
 
-
-  private hasStartedParallax = false;
+  @Input()
+  public set parallax(value:boolean) {
+    this.parallaxObserver.next(value);
+  }
+  @Input()
+  public scrollVelocity = 7;
 
   public onDestroy$ = new Subject<void>();
   private observer: IntersectionObserver | null = null;
   private isNodePlatform = isPlatformServer(PLATFORM_ID);
 
   private parallaxObserver = new BehaviorSubject<boolean>(true);
-
+  private inertia = 2000;
   @ViewChild('wrapper')
   private wrapper!: ElementRef<HTMLElement>;
 
   private requestFrame: number = 0;
-
+  thresholdSet = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
 
   public constructor(
     private zone: NgZone,
     private elementRef: ElementRef<HTMLElement>
-  ) {}
-
-  ngOnChanges(): void {
-    this.parallaxObserver.next(this.parallax);
-  }
+  ) { }
 
   ngAfterViewInit(): void {
     if (this.isNodePlatform) {
       return;
     }
- 
-    this.parallaxObserver.subscribe(() => {
-      this.zone.runOutsideAngular(() => {
-        if(this.hasStartedParallax){
-          this.stopParallax();
-          this.hasStartedParallax = false;
-        }
+    this.zone.runOutsideAngular(() => {
+      this.parallaxObserver.subscribe((enableParallax) => {
 
-        if (this.parallax) {
+        if (enableParallax) {
           this.startParallax();
-          this.hasStartedParallax = true;
-
+        } else {
+          this.stopParallax();
         }
       });
+      
     });
-    this.parallaxObserver.next(this.parallax)
   }
 
   public ngOnDestroy(): void {
+    this.stopParallax();
     this.onDestroy$.next();
     this.observer?.disconnect();
     this.parallaxObserver.complete();
   }
 
-  private getThresholdSet(): number[] {
-    const result: number[] = [];
-    for (let i = 0; i <= 1; i+=0.1) {  
-      result.push(i);
-    }
-    return result;
-  }
-
   private startParallax(): void {
-    // this.wrapper.nativeElement.style.transition = 'transform 0.05s linear';
     this.observer?.disconnect?.();
     this.observer = new IntersectionObserver(
       () => this.updateAnimation(),
       {
-        root:null,
+        root: null,
         rootMargin: `${0 - this.startOffsetParallax}px 0px 0px 0px`,
-        threshold: this.getThresholdSet(),
+        threshold: this.thresholdSet,
       }
     );
 
@@ -100,7 +79,7 @@ export class ParallaxComponent implements AfterViewInit {
     cancelAnimationFrame(this.requestFrame);
     this.observer?.disconnect?.();
     this.updateTransform(0);
-    
+
   }
 
   private updateAnimation() {
@@ -110,28 +89,27 @@ export class ParallaxComponent implements AfterViewInit {
 
   private animate(startTime: number) {
     const time = new Date().getTime();
-    if (time - startTime > 2000) { 
+    if (time - startTime > this.inertia) {
       return;
     }
-    this.requestFrame = requestAnimationFrame(() => { 
+    this.requestFrame = requestAnimationFrame(() => {
       this.updateTransform(this.getIntersectionRatio());
       this.animate(startTime);
     })
 
-   }
+  }
 
-
-  private getIntersectionRatio():number { 
+  private getIntersectionRatio(): number {
     const top = this.elementRef.nativeElement.getBoundingClientRect().top - this.startOffsetParallax;
-    if (top >= 0) { 
+    if (top >= 0) {
       return 0;
     };
-    return Math.min(-top * this.scrollVelocity,this.elementRef.nativeElement.offsetHeight * 0.7);
+    return Math.min(-top * (this.scrollVelocity / 10), this.elementRef.nativeElement.offsetHeight * 0.7);
 
   }
 
   private updateTransform(translateY: number) {
-    this.wrapper.nativeElement.style.transform = `translateY(${translateY}px)`; 
+    this.wrapper.nativeElement.style.transform = `translateY(${translateY}px)`;
   }
 
 }
