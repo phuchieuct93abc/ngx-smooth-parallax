@@ -13,9 +13,10 @@ export class ParallaxComponent implements AfterViewInit {
   @Input()
   public startOffsetParallax = 0;
   @Input()
-  public parallax = false;
+  public parallax = true;
   @Input()
   public scrollVelocity = 0.7;
+  
 
 
   private hasStartedParallax = false;
@@ -96,8 +97,10 @@ export class ParallaxComponent implements AfterViewInit {
     if (this.isNodePlatform) {
       return;
     }
+    cancelAnimationFrame(this.requestFrame);
     this.observer?.disconnect?.();
     this.updateTransform(0);
+    
   }
 
   private updateAnimation() {
