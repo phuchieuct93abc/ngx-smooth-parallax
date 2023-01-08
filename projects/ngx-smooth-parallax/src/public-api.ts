@@ -3,4 +3,5 @@
  */
 
 export * from './lib/parallax.directive';
-export * from './lib/ngx-smooth-parallax.module';
+export * from './lib/parallax.directive';
+export * from './lib/parallax/parallax.component';

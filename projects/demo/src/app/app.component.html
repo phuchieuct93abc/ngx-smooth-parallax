@@ -4,12 +4,14 @@
     <label for="enableParallax">Enable parallax</label>
   </div>
   <div style="overflow:hidden">
-    <img
+    <ngx-smooth-parallax [parallax]="parallax">
+      <img
       style="width:100%"
-      [parallax]="parallax"
       height="400"
       src="https://picsum.photos/1000/300"
     />
+    </ngx-smooth-parallax>
+   
   </div>
 
   <div>
@@ -24,13 +26,7 @@
     nisi.
   </div>
   <div style="overflow:hidden">
-    <img
-      style="width:100%"
-      height="400"
-      [parallax]="parallax"
-      [startOffsetParallax]="300"
-      src="https://picsum.photos/1000/301"
-    />
+    
   </div>
 
   <div>
@@ -45,13 +41,7 @@
     nisi.
   </div>
   <div style="overflow:hidden">
-    <img
-      style="width:100%"
-      height="400"
-      [parallax]="parallax"
-      [startOffsetParallax]="-100"
-      src="https://picsum.photos/1000/302"
-    />
+   
   </div>
 
   <div>
@@ -66,12 +56,7 @@
     nisi.
   </div>
   <div style="overflow:hidden">
-    <img
-      style="width:100%"
-      height="400"
-      [parallax]="parallax"
-      src="https://picsum.photos/1000/303"
-    />
+    
   </div>
 
   <div>
